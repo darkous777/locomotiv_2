@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Locomotiv.Model.Interfaces;
+
+public class Station : IMapPoint
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
+
+    public int Capacity { get; set; }
+
+    public ICollection<Train> Trains { get; set; }
+
+    public ICollection<Train> TrainsInStation { get; set; }
+
+    public StationType Type { get; set; }
+}

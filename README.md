@@ -1,1 +1,5 @@
-# locomotiv_2
+# Locomotiv'
+### Membres de l'équipe :
+* Alexandre Roy
+* Anthony Pageau
+* Amine Blal
