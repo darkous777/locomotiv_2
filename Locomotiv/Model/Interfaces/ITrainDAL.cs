@@ -13,5 +13,6 @@ namespace Locomotiv.Model.Interfaces
         void Add(Train train);
         void Update(Train train);
         void Delete(int id);
+        IList<Train> GetAllAvailablePassengerTrains();
     }
 }

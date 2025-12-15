@@ -23,6 +23,9 @@
             <DataTemplate DataType="{x:Type viewModel:CreateTrainForStationViewModel}">
                 <view:CreateTrainForStationView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:ReserveTicketViewModel}">
+                <view:ReserveTicketView />
+            </DataTemplate>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         </ResourceDictionary>

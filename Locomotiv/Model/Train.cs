@@ -1,7 +1,8 @@
-﻿using System;
-using System.Security.Cryptography;
-using Locomotiv.Model;
+﻿using Locomotiv.Model;
 using Locomotiv.Model.Interfaces;
+using System;
+using System.ComponentModel;
+using System.Security.Cryptography;
 
 public class Train : IMapPoint
 {
@@ -23,6 +24,35 @@ public class Train : IMapPoint
     public ICollection<Locomotive> Locomotives { get; set; }
 
     public PredefinedRoute? PredefinedRoute { get; set; }
+
+    public ICollection<Ticket> Tickets { get; set; }
+
+    public int Capacity
+    {
+        get
+        {
+            if (Locomotives == null)
+                return 0;
+
+            int totalCapacity = 0;
+
+            foreach (Locomotive locomotive in Locomotives)
+            {
+                totalCapacity += locomotive.PassengerCapacity;
+            }
+
+            return totalCapacity;
+        }
+    }
+
+    public int ReservedSeats => Tickets?.Count ?? 0;
+
+    public int AvailableSeats => Capacity - ReservedSeats;
+
+    public bool IsFull => AvailableSeats <= 0;
+
+    public bool IsAlmostFull => AvailableSeats > 0 && AvailableSeats <= 5;
+
 
     public override string ToString()
     {
