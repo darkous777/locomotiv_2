@@ -20,6 +20,8 @@
 
                         <TextBlock Text="{Binding PredefinedRoute.StartStation.Name, StringFormat='Départ : {0}'}" />
                         <TextBlock Text="{Binding PredefinedRoute.EndStation.Name, StringFormat='Arrivée : {0}'}" />
+                        <TextBlock Text="{Binding PredefinedRoute.DepartureTime, StringFormat='Départ à : {0:HH:mm}'}" />
+                        <TextBlock Text="{Binding PredefinedRoute.ArrivalTime, StringFormat='Arrivée à : {0:HH:mm}'}" />
                         <TextBlock>
                             <Run Text="Places disponibles : "/>
                             <Run Text="{Binding AvailableSeats, Mode=OneWay}"/>

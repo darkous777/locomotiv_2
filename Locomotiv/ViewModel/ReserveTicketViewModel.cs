@@ -30,9 +30,14 @@ namespace Locomotiv.ViewModel
         {
             _trainDAL = trainDAL;
 
-            AvailableTrains = new ObservableCollection<Train>(
-                _trainDAL.GetAllAvailablePassengerTrains()
-            );
+            AvailableTrains = new ObservableCollection<Train>(GetTrainWithAvailableSeats());
+        }
+
+        public List<Train> GetTrainWithAvailableSeats()
+        {
+            return _trainDAL.GetAllAvailablePassengerTrains()
+                .Where(t => t.AvailableSeats > 0)
+                .ToList();
         }
     }
 }
