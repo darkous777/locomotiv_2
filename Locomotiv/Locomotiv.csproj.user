@@ -19,6 +19,9 @@
     <Compile Update="View\MapView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\ReserveTicketView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\TrainManagementWindowView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

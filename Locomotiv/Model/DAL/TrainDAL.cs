@@ -61,5 +61,18 @@ namespace Locomotiv.Model.DAL
             _context.PredefinedRoutes.Update(predefinedRoute);
             _context.SaveChanges();
         }
+
+        public IList<Train> GetAllAvailablePassengerTrains()
+        {
+            return _context.Trains
+                .Include(t => t.PredefinedRoute)
+                .Include(t => t.Tickets)
+                .Include(t => t.Locomotives)
+                .Where(t =>
+                    t.TypeOfTrain == TrainType.Passenger &&
+                    t.PredefinedRoute != null
+                )
+                .ToList();
+        }
     }
 }

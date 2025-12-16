@@ -66,6 +66,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Block> Blocks { get; set; }
     public DbSet<BlockPoint> BlockPoints { get; set; }
     public DbSet<PredefinedRoute> PredefinedRoutes { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
 
     IConfiguration config = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
@@ -76,46 +77,46 @@ public class ApplicationDbContext : DbContext
         if (!Locomotives.Any())
         {
             Locomotives.AddRange(
-                new Locomotive { Code = "Loco-001" },
-                new Locomotive { Code = "Loco-002" },
-                new Locomotive { Code = "Loco-003" },
-                new Locomotive { Code = "Loco-004" },
-                new Locomotive { Code = "Loco-005" },
-                new Locomotive { Code = "Loco-006" },
-                new Locomotive { Code = "Loco-007" },
-                new Locomotive { Code = "Loco-008" },
-                new Locomotive { Code = "Loco-009" },
-                new Locomotive { Code = "Loco-010" },
-                new Locomotive { Code = "Loco-011" },
-                new Locomotive { Code = "Loco-012" },
-                new Locomotive { Code = "Loco-013" },
-                new Locomotive { Code = "Loco-014" },
-                new Locomotive { Code = "Loco-015" },
-                new Locomotive { Code = "Loco-016" },
-                new Locomotive { Code = "Loco-017" },
-                new Locomotive { Code = "Loco-018" },
-                new Locomotive { Code = "Loco-019" },
-                new Locomotive { Code = "Loco-020" },
-                new Locomotive { Code = "Loco-021" },
-                new Locomotive { Code = "Loco-022" },
-                new Locomotive { Code = "Loco-023" },
-                new Locomotive { Code = "Loco-024" },
-                new Locomotive { Code = "Loco-025" },
-                new Locomotive { Code = "Loco-026" },
-                new Locomotive { Code = "Loco-027" },
-                new Locomotive { Code = "Loco-028" },
-                new Locomotive { Code = "Loco-029" },
-                new Locomotive { Code = "Loco-030" },
-                new Locomotive { Code = "Loco-031" },
-                new Locomotive { Code = "Loco-032" },
-                new Locomotive { Code = "Loco-033" },
-                new Locomotive { Code = "Loco-034" },
-                new Locomotive { Code = "Loco-035" },
-                new Locomotive { Code = "Loco-036" },
-                new Locomotive { Code = "Loco-037" },
-                new Locomotive { Code = "Loco-038" },
-                new Locomotive { Code = "Loco-039" },
-                new Locomotive { Code = "Loco-040" }
+                new Locomotive { Code = "Loco-001", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-002", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-003", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-004", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-005", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-006", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-007", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-008", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-009", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-010", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-011", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-012", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-013", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-014", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-015", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-016", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-017", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-018", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-019", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-020", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-021", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-022", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-023", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-024", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-025", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-026", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-027", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-028", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-029", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-010", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-031", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-032", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-033", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-034", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-035", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-036", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-037", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-038", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-039", PassengerCapacity = 10 },
+                new Locomotive { Code = "Loco-040", PassengerCapacity = 10 }
             );
             SaveChanges();
         }
@@ -996,127 +997,147 @@ public class ApplicationDbContext : DbContext
 
         if (!PredefinedRoutes.Any())
         {
+            DateTime day = DateTime.Today;
             List<Station> savedStations = Stations.ToList();
-                AddRouteWithReverse(
+
+            AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Gatineau",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Vers Gatineau", savedStations),
-                new() { 1, 31 }
+                new() { 1, 31 },
+                day.AddHours(6),
+                day.AddHours(6).AddMinutes(30)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Gare CN",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Gare CN", savedStations),
-                new() { 1, 2, 4, 29, 27, 25, 30 }
+                new() { 1, 2, 4, 29, 27, 25, 30 },
+                day.AddHours(7),
+                day.AddHours(8).AddMinutes(45)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers le Nord",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Vers le Nord", savedStations),
-                new() { 1, 2, 4, 29, 28, 32 }
+                new() { 1, 2, 4, 29, 28, 32 },
+                day.AddHours(9),
+                day.AddHours(10).AddMinutes(15)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Gare du Palais",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Gare du Palais", savedStations),
-                new() { 1, 2, 3, 9, 11, 13, 15 }
+                new() { 1, 2, 3, 9, 11, 13, 15 },
+                day.AddHours(10),
+                day.AddHours(11).AddMinutes(30)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Port de Québec",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Port de Québec", savedStations),
-                new() { 1, 2, 3, 9, 11, 13, 15, 16, 17 }
+                new() { 1, 2, 3, 9, 11, 13, 15, 16, 17 },
+                day.AddHours(12),
+                day.AddHours(14)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Baie de Beauport",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Baie de Beauport", savedStations),
-                new() { 1, 2, 3, 9, 11, 12, 18 }
+                new() { 1, 2, 3, 9, 11, 12, 18 },
+                day.AddHours(14),
+                day.AddHours(15).AddMinutes(30)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Charlevoix",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Vers Charlevoix", savedStations),
-                new() { 1, 2, 3, 9, 11, 12, 28 }
+                new() { 1, 2, 3, 9, 11, 12, 28 },
+                day.AddHours(16),
+                day.AddHours(18).AddMinutes(30)
             );
 
             AddRouteWithReverse(
                 "Gare Québec-Gatineau vers Centre de distribution",
                 GetStationByName("Gare Québec-Gatineau", savedStations),
                 GetStationByName("Centre de distribution", savedStations),
-                new() { 1, 2, 3, 9, 11, 13, 15, 16, 17 }
+                new() { 1, 2, 3, 9, 11, 13, 15, 16, 17 },
+                day.AddHours(18),
+                day.AddHours(20)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers la Rive-Sud",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Vers la Rive-Sud", savedStations),
-                new() { 30, 34 }
+                new() { 30, 34 },
+                day.AddHours(7),
+                day.AddHours(7).AddMinutes(40)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers le Nord",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Vers le Nord", savedStations),
-                new() { 30, 25, 26, 22, 32 }
+                new() { 30, 25, 26, 22, 32 },
+                day.AddHours(9),
+                day.AddHours(10).AddMinutes(45)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers Centre de distribution",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Centre de distribution", savedStations),
-                new() { 30, 24, 7 }
+                new() { 30, 24, 7 },
+                day.AddHours(11),
+                day.AddHours(12)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers Gare du Palais",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Gare du Palais", savedStations),
-                new() { 30, 25, 27, 29, 5, 10, 11, 13, 15 }
+                new() { 30, 25, 27, 29, 5, 10, 11, 13, 15 },
+                day.AddHours(13),
+                day.AddHours(15).AddMinutes(30)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers Port de Québec",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Port de Québec", savedStations),
-                new() { 30, 25, 27, 29, 5, 10, 11, 13, 15, 16, 17 }
+                new() { 30, 25, 27, 29, 5, 10, 11, 13, 15, 16, 17 },
+                day.AddHours(15),
+                day.AddHours(18)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers Baie de Beauport",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Baie de Beauport", savedStations),
-                new() { 30, 25, 27, 29, 5, 10, 11, 12, 18 }
+                new() { 30, 25, 27, 29, 5, 10, 11, 12, 18 },
+                day.AddHours(17),
+                day.AddHours(19)
             );
 
             AddRouteWithReverse(
                 "Gare CN vers Charlevoix",
                 GetStationByName("Gare CN", savedStations),
                 GetStationByName("Vers Charlevoix", savedStations),
-                new() { 30, 25, 27, 29, 5, 10, 11, 12, 23 }
+                new() { 30, 25, 27, 29, 5, 10, 11, 12, 23 },
+                day.AddHours(19),
+                day.AddHours(22)
             );
 
-            AddRouteWithReverse(
-                "Gare du Palais vers Charlevoix",
-                GetStationByName("Gare du Palais", savedStations),
-                GetStationByName("Vers Charlevoix", savedStations),
-                new() { 15, 14, 23 }
-            );
-
-            AddRouteWithReverse(
-                "Gare du Palais vers Baie de Beauport",
-                GetStationByName("Gare du Palais", savedStations),
-                GetStationByName("Baie de Beauport", savedStations),
-                new() { 15, 14, 18 }
-            );
             SaveChanges();
         }
+
 
 
     }
@@ -1125,14 +1146,16 @@ public class ApplicationDbContext : DbContext
         return savedStations.FirstOrDefault(s => s.Name == name);
     }
 
-    private void AddRouteWithReverse(string name, Station start, Station end, List<int> blockIds)
+    private void AddRouteWithReverse(string name, Station start, Station end, List<int> blockIds, DateTime departureTime, DateTime arrivalTime)
     {
         PredefinedRoutes.Add(new PredefinedRoute
         {
             Name = name,
             StartStation = start,
             EndStation = end,
-            BlockIds = blockIds
+            BlockIds = blockIds,
+            DepartureTime = departureTime,
+            ArrivalTime = arrivalTime
         });
 
         PredefinedRoutes.Add(new PredefinedRoute
@@ -1140,7 +1163,9 @@ public class ApplicationDbContext : DbContext
             Name = $"{name} (Retour)",
             StartStation = end,
             EndStation = start,
-            BlockIds = blockIds.AsEnumerable().Reverse().ToList()
+            BlockIds = blockIds.AsEnumerable().Reverse().ToList(),
+            DepartureTime = departureTime,
+            ArrivalTime = arrivalTime
         });
     }
 }

@@ -9,4 +9,6 @@ public class Locomotive
     public int Id { get; set; }
 
     public string Code { get; set; }
+
+    public int PassengerCapacity { get; set; }
 }

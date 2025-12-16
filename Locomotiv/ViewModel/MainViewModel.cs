@@ -30,6 +30,8 @@ namespace Locomotiv.ViewModel
 
         public ICommand DisconnectCommand { get; }
 
+        public ICommand NavigateToReserveTicketViewCommand { get; set; }
+
         public MainViewModel(
             INavigationService navigationService, 
             IUserSessionService userSessionService
@@ -48,6 +50,9 @@ namespace Locomotiv.ViewModel
             DisconnectCommand = new RelayCommand(
                 Disconnect, () => UserSessionService.IsUserConnected
             );
+
+            NavigateToReserveTicketViewCommand = new RelayCommand(()
+                => NavigationService.NavigateTo<ReserveTicketViewModel>());
 
             NavigationService.NavigateTo<HomeViewModel>();
         }

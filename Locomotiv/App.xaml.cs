@@ -37,6 +37,7 @@ namespace Locomotiv
             services.AddTransient<MapViewModel>();
             services.AddTransient<TrainManagementViewModel>();
             services.AddTransient<CreateTrainForStationViewModel>();
+            services.AddTransient<ReserveTicketViewModel>();
 
             services.AddSingleton<IUserDAL, UserDAL>();
             services.AddSingleton<IStationDAL, StationDAL>();
