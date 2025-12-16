@@ -7,7 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Text="Acheter un billet"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="0,0,0,20"/>
         <ListBox
+            Grid.Row="1"
             ItemsSource="{Binding AvailableTrains}"
             SelectedItem="{Binding SelectedTrain}"
             Height="300">
@@ -41,5 +52,48 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Border Grid.Row="2"
+            BorderBrush="#CCC"
+            BorderThickness="1"
+            Padding="10"
+            Margin="0,10,0,0"
+            Visibility="{Binding HasSelectedTrain,
+                         Converter={StaticResource BoolToVisibilityConverter}}">
+
+            <StackPanel>
+
+                <TextBlock Text="Détails de l’itinéraire"
+               FontSize="16"
+               FontWeight="Bold"
+               Margin="0,0,0,10"/>
+
+                <TextBlock Text="{Binding SelectedTrain.Id,
+               StringFormat='Train #{0}'}"
+               FontWeight="SemiBold"/>
+
+                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.Name}" />
+
+                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.StartStation.Name,
+               StringFormat='Départ : {0}'}"/>
+
+                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.EndStation.Name,
+               StringFormat='Arrivée : {0}'}"/>
+
+                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.DepartureTime,
+               StringFormat='Heure de départ : {0:HH:mm}'}"/>
+
+                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.ArrivalTime,
+               StringFormat='Heure d’arrivée : {0:HH:mm}'}"/>
+
+                <TextBlock Text="{Binding SelectedTrain.AvailableSeats,
+               StringFormat='Places disponibles : {0}'}"/>
+
+                <TextBlock Text="Dernières places disponibles"
+               Foreground="Orange"
+               Visibility="{Binding SelectedTrain.IsAlmostFull,
+                            Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

@@ -15,6 +15,8 @@ namespace Locomotiv.ViewModel
 
         public ObservableCollection<Train> AvailableTrains { get; }
 
+        public bool HasSelectedTrain => SelectedTrain != null;
+
         private Train _selectedTrain;
         public Train SelectedTrain
         {
@@ -23,6 +25,7 @@ namespace Locomotiv.ViewModel
             {
                 _selectedTrain = value;
                 OnPropertyChanged(nameof(SelectedTrain));
+                OnPropertyChanged(nameof(HasSelectedTrain));
             }
         }
 
