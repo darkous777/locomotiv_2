@@ -333,53 +333,35 @@ public class ApplicationDbContext : DbContext
         if (!Users.Any())
         {
             List<Station> savedStations = Stations.ToList();
+            List<User> usersToAdd = new List<User>();
 
-            Users.AddRange(
-                new User
+            usersToAdd.Add(new User
+            {
+                Prenom = sectionAdmin["Prenom"],
+                Nom = sectionAdmin["Nom"],
+                Username = sectionAdmin["Username"],
+                Password = BCrypt.Net.BCrypt.HashPassword(sectionAdmin["Password"]),
+                IsAdmin = true,
+            });
+
+            IConfigurationSection sectionUsers = config.GetSection("DefaultUsers");
+            foreach (var userSection in sectionUsers.GetChildren())
+            {
+                var employeeType = Enum.Parse<EmployeeType>(userSection["Type"]);
+                var stationIndex = int.Parse(userSection["StationIndex"]);
+
+                usersToAdd.Add(new User
                 {
-                    Prenom = sectionAdmin["Prenom"],
-                    Nom = sectionAdmin["Nom"],
-                    Username = sectionAdmin["Username"],
-                    Password = sectionAdmin["Password"],
-                    IsAdmin = true,
-                },
-                new User
-                {
-                    Prenom = "Mecanicien",
-                    Nom = "Standard",
-                    Username = "employe1",
-                    Password = "employe",
-                    Type = EmployeeType.Mechanic,
-                    Station = savedStations[0],
-                },
-                new User
-                {
-                    Prenom = "Conducteur",
-                    Nom = "Standard",
-                    Username = "employe2",
-                    Password = "employe",
-                    Type = EmployeeType.Conductor,
-                    Station = savedStations[1],
-                },
-                new User
-                {
-                    Prenom = "PersonnelAdminstratif",
-                    Nom = "Standard",
-                    Username = "employe3",
-                    Password = "employe",
-                    Type = EmployeeType.AdministrativeStaff,
-                    Station = savedStations[2],
-                },
-                new User
-                {
-                    Prenom = "ControleurDeTrafic",
-                    Nom = "Standard",
-                    Username = "employe4",
-                    Password = "employe",
-                    Type = EmployeeType.TrafficController,
-                    Station = savedStations[3],
-                }
-            );
+                    Prenom = userSection["Prenom"],
+                    Nom = userSection["Nom"],
+                    Username = userSection["Username"],
+                    Password = BCrypt.Net.BCrypt.HashPassword(userSection["Password"]),
+                    Type = employeeType,
+                    Station = savedStations[stationIndex],
+                });
+            }
+
+            Users.AddRange(usersToAdd);
             SaveChanges();
         }
 
@@ -579,54 +561,35 @@ public class ApplicationDbContext : DbContext
             if (!Users.Any())
             {
                 List<Station> savedStations = Stations.ToList();
+                List<User> usersToAdd = new List<User>();
 
-                Users.AddRange(
-                    new User
-                    {
-                        Prenom = sectionAdmin["Prenom"],
-                        Nom = sectionAdmin["Nom"],
-                        Username = sectionAdmin["Username"],
-                        Password = sectionAdmin["Password"],
-                        IsAdmin = true,
+                usersToAdd.Add(new User
+                {
+                    Prenom = sectionAdmin["Prenom"],
+                    Nom = sectionAdmin["Nom"],
+                    Username = sectionAdmin["Username"],
+                    Password = BCrypt.Net.BCrypt.HashPassword(sectionAdmin["Password"]),
+                    IsAdmin = true,
+                });
 
-                    },
-                    new User
+                IConfigurationSection sectionUsers = config.GetSection("DefaultUsers");
+                foreach (var userSection in sectionUsers.GetChildren())
+                {
+                    var employeeType = Enum.Parse<EmployeeType>(userSection["Type"]);
+                    var stationIndex = int.Parse(userSection["StationIndex"]);
+
+                    usersToAdd.Add(new User
                     {
-                        Prenom = "Mecanicien",
-                        Nom = "Standard",
-                        Username = "employe1",
-                        Password = "employe",
-                        Type = EmployeeType.Mechanic,
-                        Station = savedStations[0],
-                    },
-                    new User
-                    {
-                        Prenom = "Conducteur",
-                        Nom = "Standard",
-                        Username = "employe2",
-                        Password = "employe",
-                        Type = EmployeeType.Conductor,
-                        Station = savedStations[1],
-                    },
-                    new User
-                    {
-                        Prenom = "PersonnelAdminstratif",
-                        Nom = "Standard",
-                        Username = "employe3",
-                        Password = "employe",
-                        Type = EmployeeType.AdministrativeStaff,
-                        Station = savedStations[2],
-                    },
-                    new User
-                    {
-                        Prenom = "ControleurDeTrafic",
-                        Nom = "Standard",
-                        Username = "employe4",
-                        Password = "employe",
-                        Type = EmployeeType.TrafficController,
-                        Station = savedStations[3],
-                    }
-                );
+                        Prenom = userSection["Prenom"],
+                        Nom = userSection["Nom"],
+                        Username = userSection["Username"],
+                        Password = BCrypt.Net.BCrypt.HashPassword(userSection["Password"]),
+                        Type = employeeType,
+                        Station = savedStations[stationIndex],
+                    });
+                }
+
+                Users.AddRange(usersToAdd);
                 SaveChanges();
             }
         }

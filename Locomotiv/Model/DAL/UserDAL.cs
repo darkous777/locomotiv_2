@@ -16,7 +16,7 @@ namespace Locomotiv.Model.DAL
 
         public User? FindByUsernameAndPassword(string u, string p)
         {
-            return _context.Users
+            var user = _context.Users
                 .Include(user => user.Station)
                     .ThenInclude(s => s.Trains)
                         .ThenInclude(t => t.Locomotives)
@@ -29,7 +29,14 @@ namespace Locomotiv.Model.DAL
                 .Include(user => user.Station)
                     .ThenInclude(s => s.TrainsInStation)
                         .ThenInclude(t => t.Wagons)
-                .FirstOrDefault(u2 => u2.Username == u && u2.Password == p);
+                .FirstOrDefault(u2 => u2.Username == u);
+
+            if (user != null && BCrypt.Net.BCrypt.Verify(p, user.Password))
+            {
+                return user;
+            }
+
+            return null;
         }
     }
 }
