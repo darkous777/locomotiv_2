@@ -11,6 +11,7 @@ namespace LocomotivTests.ViewModel
         private readonly Mock<IStationDAL> _stationDALMock;
         private readonly Mock<IBlockPointDAL> _blockPointsDALMock;
         private readonly Mock<IBlockDAL> _blockDALMock;
+        private readonly Mock<ILoggingService> _loggingServiceMock;
         private readonly Mock<INavigationService> _navigationServiceMock;
         private readonly Mock<IStationContextService> _stationContextServiceMock;
         private readonly Mock<IUserSessionService> _userSessionServiceMock;
@@ -33,12 +34,13 @@ namespace LocomotivTests.ViewModel
             _stationDALMock = new Mock<IStationDAL>();
             _blockPointsDALMock = new Mock<IBlockPointDAL>();
             _blockDALMock = new Mock<IBlockDAL>();
+            _loggingServiceMock = new Mock<ILoggingService>();
             _navigationServiceMock = new Mock<INavigationService>();
             _stationContextServiceMock = new Mock<IStationContextService>();
             _userSessionServiceMock = new Mock<IUserSessionService>();
             _predefinedRouteDALMock = new Mock<IPredefinedRouteDAL>();
             _trainDALMock = new Mock<ITrainDAL>();
-            _trainMovementServiceMock = new Mock<TrainMovementService>(_stationDALMock.Object, _blockDALMock.Object);
+            _trainMovementServiceMock = new Mock<TrainMovementService>(_stationDALMock.Object, _blockDALMock.Object, _loggingServiceMock.Object);
             _markerFactoryMock = new Mock<MapMarkerFactory>();
             _infoServiceMock = new Mock<MapInfoService>(_blockDALMock.Object);
 
@@ -84,7 +86,7 @@ namespace LocomotivTests.ViewModel
                 {
                     _trainInTestStation
                 },
-                Trains = new List<Train> 
+                Trains = new List<Train>
                 {
                     _trainNotInTestStation
                 }
@@ -103,23 +105,23 @@ namespace LocomotivTests.ViewModel
 
             _blockPoints = new List<BlockPoint>
             {
-                new BlockPoint 
-                { 
+                new BlockPoint
+                {
                     Id = 1,
                     Longitude = -71.204255,
                     Latitude = 46.842256
                 },
-                new BlockPoint 
+                new BlockPoint
                 {
-                    Id = 2, 
-                    Longitude = -71.334879, 
-                    Latitude = 46.747842 
+                    Id = 2,
+                    Longitude = -71.334879,
+                    Latitude = 46.747842
                 },
-                new BlockPoint 
-                { 
-                    Id = 3, 
-                    Longitude = -71.123456, 
-                    Latitude = 46.654321 
+                new BlockPoint
+                {
+                    Id = 3,
+                    Longitude = -71.123456,
+                    Latitude = 46.654321
                 }
             };
 
@@ -204,7 +206,7 @@ namespace LocomotivTests.ViewModel
             // Assert
             Assert.Equal(
                 $"🛤️ BlockPoint 1\n\n" +
-                $"Blocs connectés :\n - Block 1 (Libre) → vers BlockPoint 2", 
+                $"Blocs connectés :\n - Block 1 (Libre) → vers BlockPoint 2",
                 blockstring);
         }
 
