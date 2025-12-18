@@ -34,6 +34,7 @@ namespace LocomotivTests.ViewModel
             _stationDALMock = new Mock<IStationDAL>();
             _blockPointsDALMock = new Mock<IBlockPointDAL>();
             _blockDALMock = new Mock<IBlockDAL>();
+            _loggingServiceMock = new Mock<ILoggingService>();
             _navigationServiceMock = new Mock<INavigationService>();
             _stationContextServiceMock = new Mock<IStationContextService>();
             _userSessionServiceMock = new Mock<IUserSessionService>();
