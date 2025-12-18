@@ -21,7 +21,6 @@ namespace Locomotiv
         private readonly ServiceProvider _serviceProvider;
         public App()
         {
-            // Configure NLog
             LogManager.Setup().LoadConfigurationFromFile("nlog.config");
 
             var builder = new ConfigurationBuilder()
