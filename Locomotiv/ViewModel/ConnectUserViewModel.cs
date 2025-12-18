@@ -11,6 +11,7 @@ namespace Locomotiv.ViewModel
         private readonly IUserDAL _userDAL;
         private INavigationService _navigationService;
         private IUserSessionService _userSessionService;
+        private ILoggingService _loggingService;
 
         private string _username;
         public string Username
@@ -45,28 +46,41 @@ namespace Locomotiv.ViewModel
         public ICommand ConnectCommand { get; set; }
 
         public ConnectUserViewModel(
-            IUserDAL userDAL, 
-            INavigationService navigationService, 
-            IUserSessionService userSessionService
+            IUserDAL userDAL,
+            INavigationService navigationService,
+            IUserSessionService userSessionService,
+            ILoggingService loggingService
         )
         {
             _userDAL = userDAL;
             _navigationService = navigationService;
             _userSessionService = userSessionService;
+            _loggingService = loggingService;
             ConnectCommand = new RelayCommand(Connect, CanConnect);
         }
 
         private void Connect()
         {
-            User? user = _userDAL.FindByUsernameAndPassword(Username, Password);
-            if (user != null)
+            try
             {
-                _userSessionService.ConnectedUser = user;
-                _navigationService.NavigateTo<HomeViewModel>();
+                User? user = _userDAL.FindByUsernameAndPassword(Username, Password);
+                if (user != null)
+                {
+                    _userSessionService.ConnectedUser = user;
+                    _loggingService.LogInfo($"Utilisateur '{Username}' connecté avec succès.");
+                    _navigationService.NavigateTo<HomeViewModel>();
+                }
+                else
+                {
+                    _loggingService.LogWarning($"Tentative de connexion échouée pour l'utilisateur '{Username}'.");
+                    AddError(nameof(Password), "Utilisateur ou mot de passe invalide.");
+                    OnPropertyChanged(nameof(ErrorMessages));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                AddError(nameof(Password), "Utilisateur ou mot de passe invalide.");
+                _loggingService.LogError("Erreur lors de la tentative de connexion.", ex);
+                AddError(nameof(Password), "Une erreur est survenue lors de la connexion. Veuillez réessayer.");
                 OnPropertyChanged(nameof(ErrorMessages));
             }
         }

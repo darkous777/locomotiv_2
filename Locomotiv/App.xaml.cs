@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Locomotiv.Utils.Services.Map;
+using NLog;
 
 namespace Locomotiv
 {
@@ -20,6 +21,9 @@ namespace Locomotiv
         private readonly ServiceProvider _serviceProvider;
         public App()
         {
+            // Configure NLog
+            LogManager.Setup().LoadConfigurationFromFile("nlog.config");
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory());
             IConfiguration configuration = builder.Build();
@@ -52,6 +56,7 @@ namespace Locomotiv
             services.AddSingleton<IUserSessionService, Service>();
             services.AddSingleton<IStationContextService, StationContextService>();
             services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
+            services.AddSingleton<ILoggingService, LoggingService>();
 
             services.AddSingleton<TrainMovementService>();
             services.AddSingleton<MapMarkerFactory>();

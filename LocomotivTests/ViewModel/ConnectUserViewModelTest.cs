@@ -10,6 +10,7 @@ namespace LocomotivTests.ViewModel
         private readonly Mock<IUserDAL> _userDALMock;
         private readonly Mock<INavigationService> _navigationServiceMock;
         private readonly Mock<IUserSessionService> _userSessionServiceMock;
+        private readonly Mock<ILoggingService> _loggingServiceMock;
         private readonly ConnectUserViewModel _viewmodel;
         private readonly User _user;
 
@@ -18,11 +19,13 @@ namespace LocomotivTests.ViewModel
             _userDALMock = new Mock<IUserDAL>();
             _navigationServiceMock = new Mock<INavigationService>();
             _userSessionServiceMock = new Mock<IUserSessionService>();
+            _loggingServiceMock = new Mock<ILoggingService>();
 
             _viewmodel = new ConnectUserViewModel(
                 _userDALMock.Object,
                 _navigationServiceMock.Object,
-                _userSessionServiceMock.Object
+                _userSessionServiceMock.Object,
+                _loggingServiceMock.Object
             );
 
             _user = new User
