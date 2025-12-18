@@ -10,6 +10,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Create appsettings.json from secret
+        run: |
+          $content = @'
+          ${{ secrets.APP_CONFIG_PROD }}
+          '@
+          Set-Content -Path Locomotiv/appsettings.json -Value $content
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -24,6 +32,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Create appsettings.json from secret
+      run: |
+        $content = @'
+        ${{ secrets.APP_CONFIG_PROD }}
+        '@
+        Set-Content -Path Locomotiv/appsettings.json -Value $content
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4

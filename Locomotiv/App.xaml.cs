@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using Locomotiv.Utils;
 using Locomotiv.ViewModel;
 using Locomotiv.Model;
@@ -51,6 +51,7 @@ namespace Locomotiv
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();
             services.AddSingleton<IStationContextService, StationContextService>();
+            services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
 
             services.AddSingleton<TrainMovementService>();
             services.AddSingleton<MapMarkerFactory>();
