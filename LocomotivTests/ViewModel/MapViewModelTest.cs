@@ -11,7 +11,7 @@ namespace LocomotivTests.ViewModel
         private readonly Mock<IStationDAL> _stationDALMock;
         private readonly Mock<IBlockPointDAL> _blockPointsDALMock;
         private readonly Mock<IBlockDAL> _blockDALMock;
-        private readonly Mock<ILoggingService> _logsServicesMock;
+        private readonly Mock<ILoggingService> _loggingServiceMock;
         private readonly Mock<INavigationService> _navigationServiceMock;
         private readonly Mock<IStationContextService> _stationContextServiceMock;
         private readonly Mock<IUserSessionService> _userSessionServiceMock;
@@ -40,7 +40,7 @@ namespace LocomotivTests.ViewModel
             _userSessionServiceMock = new Mock<IUserSessionService>();
             _predefinedRouteDALMock = new Mock<IPredefinedRouteDAL>();
             _trainDALMock = new Mock<ITrainDAL>();
-            _trainMovementServiceMock = new Mock<TrainMovementService>(_stationDALMock.Object, _blockDALMock.Object, _logsServicesMock.Object);
+            _trainMovementServiceMock = new Mock<TrainMovementService>(_stationDALMock.Object, _blockDALMock.Object, _loggingServiceMock.Object);
             _markerFactoryMock = new Mock<MapMarkerFactory>();
             _infoServiceMock = new Mock<MapInfoService>(_blockDALMock.Object);
 
