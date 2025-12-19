@@ -1,4 +1,4 @@
-﻿using Locomotiv.Model;
+using Locomotiv.Model;
 using Locomotiv.Utils.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -361,6 +361,21 @@ public class ApplicationDbContext : DbContext
                 });
             }
 
+            IConfigurationSection sectionClients = config.GetSection("DefaultClients");
+            foreach (var clientSection in sectionClients.GetChildren())
+            {
+                usersToAdd.Add(new User
+                {
+                    Prenom = clientSection["Prenom"],
+                    Nom = clientSection["Nom"],
+                    Username = clientSection["Username"],
+                    Password = BCrypt.Net.BCrypt.HashPassword(clientSection["Password"]),
+                    IsAdmin = false,
+                    Type = EmployeeType.None,
+                    Station = null
+                });
+            }
+
             Users.AddRange(usersToAdd);
             SaveChanges();
         }
@@ -557,44 +572,7 @@ public class ApplicationDbContext : DbContext
                 }
             );
             SaveChanges();
-
-            if (!Users.Any())
-            {
-                List<Station> savedStations = Stations.ToList();
-                List<User> usersToAdd = new List<User>();
-
-                usersToAdd.Add(new User
-                {
-                    Prenom = sectionAdmin["Prenom"],
-                    Nom = sectionAdmin["Nom"],
-                    Username = sectionAdmin["Username"],
-                    Password = BCrypt.Net.BCrypt.HashPassword(sectionAdmin["Password"]),
-                    IsAdmin = true,
-                });
-
-                IConfigurationSection sectionUsers = config.GetSection("DefaultUsers");
-                foreach (var userSection in sectionUsers.GetChildren())
-                {
-                    var employeeType = Enum.Parse<EmployeeType>(userSection["Type"]);
-                    var stationIndex = int.Parse(userSection["StationIndex"]);
-
-                    usersToAdd.Add(new User
-                    {
-                        Prenom = userSection["Prenom"],
-                        Nom = userSection["Nom"],
-                        Username = userSection["Username"],
-                        Password = BCrypt.Net.BCrypt.HashPassword(userSection["Password"]),
-                        Type = employeeType,
-                        Station = savedStations[stationIndex],
-                    });
-                }
-
-                Users.AddRange(usersToAdd);
-                SaveChanges();
-            }
         }
-
-
 
         if (!Blocks.Any())
         {
@@ -1099,6 +1077,18 @@ public class ApplicationDbContext : DbContext
             );
 
             SaveChanges();
+
+            List<PredefinedRoute> savedRoutes = PredefinedRoutes.ToList();
+            List<Train> passengerTrains = savedTrains.Where(t => t.TypeOfTrain == TrainType.Passenger).ToList();
+
+            if (passengerTrains.Count > 0 && savedRoutes.Count > 0)
+            {
+                for (int i = 0; i < passengerTrains.Count; i++)
+                {
+                    passengerTrains[i].PredefinedRoute = savedRoutes[i % savedRoutes.Count];
+                }
+                SaveChanges();
+            }
         }
 
 
@@ -1111,6 +1101,9 @@ public class ApplicationDbContext : DbContext
 
     private void AddRouteWithReverse(string name, Station start, Station end, List<int> blockIds, DateTime departureTime, DateTime arrivalTime)
     {
+        var duration = arrivalTime - departureTime;
+        decimal basePrice = 15.00m + (decimal)(duration.TotalMinutes * 0.25d);
+
         PredefinedRoutes.Add(new PredefinedRoute
         {
             Name = name,
@@ -1118,7 +1111,9 @@ public class ApplicationDbContext : DbContext
             EndStation = end,
             BlockIds = blockIds,
             DepartureTime = departureTime,
-            ArrivalTime = arrivalTime
+            ArrivalTime = arrivalTime,
+            Price = basePrice,
+            IntermediateStations = string.Empty
         });
 
         PredefinedRoutes.Add(new PredefinedRoute
@@ -1128,7 +1123,9 @@ public class ApplicationDbContext : DbContext
             EndStation = start,
             BlockIds = blockIds.AsEnumerable().Reverse().ToList(),
             DepartureTime = departureTime,
-            ArrivalTime = arrivalTime
+            ArrivalTime = arrivalTime,
+            Price = basePrice,
+            IntermediateStations = string.Empty
         });
     }
 }

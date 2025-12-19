@@ -50,6 +50,7 @@ namespace Locomotiv
             services.AddSingleton<IWagonDAL, WagonDAL>();
             services.AddSingleton<ITrainDAL, TrainDAL>();
             services.AddSingleton<IPredefinedRouteDAL, PredefinedRouteDal>();
+            services.AddSingleton<ITicketDAL, TicketDAL>();
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IUserSessionService, Service>();

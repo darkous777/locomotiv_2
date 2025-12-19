@@ -22,5 +22,9 @@ namespace Locomotiv.Model
         public DateTime ArrivalTime { get; set; }
 
         public TimeSpan Duration => ArrivalTime - DepartureTime;
+
+        public decimal Price { get; set; }
+
+        public string IntermediateStations { get; set; } = string.Empty;
     }
 }
