@@ -16,6 +16,7 @@ namespace Locomotiv.ViewModel
         private readonly IStationDAL _stationDAL;
         private readonly IPredefinedRouteDAL _predefinedRouteDAL;
         private readonly ITrainDAL _trainDAL;
+        private readonly ITicketDAL _ticketDAL; // Add ticket DAL
 
         public User? ConnectedUser
         {
@@ -24,7 +25,7 @@ namespace Locomotiv.ViewModel
 
         public string WelcomeMessage
         {
-            get => ConnectedUser == null ? 
+            get => ConnectedUser == null ?
                 "Bienvenue chère personne inconnue!" : $"Bienvenue {ConnectedUser.Prenom}!";
         }
 
@@ -82,6 +83,29 @@ namespace Locomotiv.ViewModel
         {
             get => EmployeeStation?.TrainsInStation;
             set => _trainsInStation = value;
+        }
+
+        // Client Tickets Properties
+        private ObservableCollection<Ticket> _clientTickets;
+        public ObservableCollection<Ticket> ClientTickets
+        {
+            get => _clientTickets;
+            set
+            {
+                _clientTickets = value;
+                OnPropertyChanged(nameof(ClientTickets));
+            }
+        }
+
+        private bool _hasTickets;
+        public bool HasTickets
+        {
+            get => _hasTickets;
+            set
+            {
+                _hasTickets = value;
+                OnPropertyChanged(nameof(HasTickets));
+            }
         }
 
         private int? _totalStations;
@@ -243,9 +267,9 @@ namespace Locomotiv.ViewModel
         private string _selectedRouteSummary;
         public string SelectedRouteSummary
         {
-            get { 
+            get {
                 return _selectedRouteSummary;
-            } 
+            }
             set
             {
                 _selectedRouteSummary = value;
@@ -254,12 +278,13 @@ namespace Locomotiv.ViewModel
         }
 
         public HomeViewModel(
-            IUserDAL userDAL, 
-            INavigationService navigationService, 
-            IUserSessionService userSessionService, 
-            IStationDAL stationDAL, 
-            IPredefinedRouteDAL predefinedRouteDAL, 
-            ITrainDAL trainDAL
+            IUserDAL userDAL,
+            INavigationService navigationService,
+            IUserSessionService userSessionService,
+            IStationDAL stationDAL,
+            IPredefinedRouteDAL predefinedRouteDAL,
+            ITrainDAL trainDAL,
+            ITicketDAL ticketDAL // Add ticket DAL parameter
         )
         {
             _userDAL = userDAL;
@@ -268,12 +293,23 @@ namespace Locomotiv.ViewModel
             _stationDAL = stationDAL;
             _predefinedRouteDAL = predefinedRouteDAL;
             _trainDAL = trainDAL;
+            _ticketDAL = ticketDAL;
+
             AllStations = _stationDAL.GetAll();
             TrainsForSelectedStation = new ObservableCollection<Train>();
             AvailableEndStations = new ObservableCollection<Station>(AllStations);
+            ClientTickets = new ObservableCollection<Ticket>();
+
             LogoutCommand = new RelayCommand(Logout, CanLogout);
             FindRouteCommand = new RelayCommand(FindRoute, CanFindRoute);
+
+            // Load client tickets if user is a client
+            if (IsClient)
+            {
+                LoadClientTickets();
+            }
         }
+
         public ICommand LogoutCommand { get; set; }
 
         private void Logout()
@@ -285,6 +321,22 @@ namespace Locomotiv.ViewModel
         private bool CanLogout()
         {
             return _userSessionService.IsUserConnected;
+        }
+
+        private void LoadClientTickets()
+        {
+            if (ConnectedUser != null)
+            {
+                var tickets = _ticketDAL.GetTicketsByUser(ConnectedUser.Id);
+                ClientTickets.Clear();
+
+                foreach (var ticket in tickets ?? new List<Ticket>())
+                {
+                    ClientTickets.Add(ticket);
+                }
+
+                HasTickets = ClientTickets.Count > 0;
+            }
         }
 
         private void UpdateAvailableTrains()
@@ -338,6 +390,7 @@ namespace Locomotiv.ViewModel
             SelectedTrain.PredefinedRoute = predefinedRoute;
             _trainDAL.Update(SelectedTrain);
         }
+
         private void UpdateAvailableEndStations()
         {
             AvailableEndStations.Clear();
