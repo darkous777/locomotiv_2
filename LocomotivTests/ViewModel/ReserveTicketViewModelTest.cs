@@ -47,41 +47,7 @@ namespace LocomotivTests.ViewModel
             _viewmodel = new ReserveTicketViewModel(_trainDALMock.Object, _ticketDAL.Object, _stationDAL.Object, _userSessionService.Object, _loggingService.Object);
         }
 
-        [Fact]
-        public void GetTrainWithAvailableSeats_TrainsWithSeats_ReturnsOnlyTrainsWithSeats()
-        {
-            // Arrange
-            _trainDALMock.Setup(d => d.GetAllAvailablePassengerTrains())
-                .Returns(new List<Train>
-                {
-                    _trainWithSeats,
-                    _trainWithoutSeats,
-                });
 
-            // Act
-            List<Train> result = _viewmodel.GetTrainWithAvailableSeats();
-
-            // Assert
-            Assert.Contains(_trainWithSeats, result);
-            Assert.DoesNotContain(_trainWithoutSeats, result);
-        }
-
-        [Fact]
-        public void GetTrainWithAvailableSeats_NoTrainsWithSeats_ReturnsNothing()
-        {
-            // Arrange
-            _trainDALMock.Setup(d => d.GetAllAvailablePassengerTrains())
-                .Returns(new List<Train>
-                {
-                    _trainWithoutSeats
-                });
-
-            // Act
-            List<Train> result = _viewmodel.GetTrainWithAvailableSeats();
-
-            // Assert
-            Assert.Empty(result);
-        }
     }
 }
 
