@@ -109,6 +109,26 @@
             </StackPanel>
         </ScrollViewer>
 
+        <StackPanel Grid.Row="1"
+                    Visibility="{Binding IsClient, Converter={StaticResource BoolToVisibilityConverter}}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="Bienvenue chez Locomotiv!"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+            <TextBlock Text="Pour réserver un billet, cliquez sur le bouton"
+                       FontSize="16"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,5"/>
+            <TextBlock Text="'Réserver un billet' dans le menu de gauche."
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       Foreground="#4CAF50"/>
+        </StackPanel>
+
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVisibilityConverter}}">

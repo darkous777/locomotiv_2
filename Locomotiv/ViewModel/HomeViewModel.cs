@@ -30,7 +30,9 @@ namespace Locomotiv.ViewModel
 
         public bool IsAdmin => ConnectedUser?.IsAdmin ?? false;
 
-        public bool IsEmployee => ConnectedUser != null && !ConnectedUser.IsAdmin;
+        public bool IsEmployee => ConnectedUser != null && !ConnectedUser.IsAdmin && ConnectedUser.Type != EmployeeType.None;
+
+        public bool IsClient => ConnectedUser != null && !ConnectedUser.IsAdmin && ConnectedUser.Type == EmployeeType.None;
 
         private Station? _employeeStation;
         private string _stationName;

@@ -1,99 +1,139 @@
-﻿<UserControl x:Class="Locomotiv.View.ReserveTicketView"
+<UserControl x:Class="Locomotiv.View.ReserveTicketView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Locomotiv.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="900">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
         <TextBlock Grid.Row="0"
-                   Text="Acheter un billet"
+                   Text="Réservation de billets"
                    FontSize="24"
                    FontWeight="Bold"
                    Margin="0,0,0,20"/>
-        <ListBox
-            Grid.Row="1"
-            ItemsSource="{Binding AvailableTrains}"
-            SelectedItem="{Binding SelectedTrain}"
-            Height="300">
+
+        <GroupBox Grid.Row="1" Header="Filtres" Padding="10" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Date:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker Grid.Column="1" SelectedDate="{Binding SelectedDate}" Margin="0,0,15,0"/>
+
+                <TextBlock Grid.Column="2" Text="Heure départ:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBox Grid.Column="3" Text="{Binding FilterDepartureTime, UpdateSourceTrigger=PropertyChanged}"
+                         Width="80" Margin="0,0,15,0" ToolTip="Format: HH:mm"/>
+
+                <TextBlock Grid.Column="4" Text="Destination:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <ComboBox Grid.Column="5" ItemsSource="{Binding AllStations}"
+                          SelectedItem="{Binding SelectedDestination}"
+                          DisplayMemberPath="Name" Margin="0,0,15,0"/>
+
+                <Button Grid.Column="6" Content="Réinitialiser" Command="{Binding ClearFiltersCommand}"
+                        Padding="10,5"/>
+            </Grid>
+        </GroupBox>
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding FilteredTrains}"
+                 SelectedItem="{Binding SelectedTrain}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock Text="{Binding Id, StringFormat='Train #{0}'}"
-                           FontWeight="Bold"/>
-                        <TextBlock Text="{Binding PredefinedRoute.Name}" />
+                    <Border BorderBrush="#DDD" BorderThickness="1" Padding="10" Margin="5">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Id, StringFormat='Train #{0}'}"
+                                       FontWeight="Bold" FontSize="14"/>
+                            <TextBlock Text="{Binding PredefinedRoute.Name}" Margin="0,5,0,0"/>
 
-                        <TextBlock Text="{Binding PredefinedRoute.StartStation.Name, StringFormat='Départ : {0}'}" />
-                        <TextBlock Text="{Binding PredefinedRoute.EndStation.Name, StringFormat='Arrivée : {0}'}" />
-                        <TextBlock Text="{Binding PredefinedRoute.DepartureTime, StringFormat='Départ à : {0:HH:mm}'}" />
-                        <TextBlock Text="{Binding PredefinedRoute.ArrivalTime, StringFormat='Arrivée à : {0:HH:mm}'}" />
-                        <TextBlock>
-                            <Run Text="Places disponibles : "/>
-                            <Run Text="{Binding AvailableSeats, Mode=OneWay}"/>
-                        </TextBlock>
+                            <Grid Margin="0,5,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                        <TextBlock Text="Dernières places disponibles"
-                           Foreground="Orange"
-                           Visibility="{Binding IsAlmostFull,
-                            Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Départ:" FontWeight="SemiBold" Margin="0,2"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PredefinedRoute.StartStation.Name}" Margin="5,2"/>
 
-                        <TextBlock Text="COMPLET"
-                           Foreground="Red"
-                           FontWeight="Bold"
-                           Visibility="{Binding IsFull,
-                            Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    </StackPanel>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Arrivée:" FontWeight="SemiBold" Margin="0,2"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PredefinedRoute.EndStation.Name}" Margin="5,2"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Départ à:" FontWeight="SemiBold" Margin="0,2"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PredefinedRoute.DepartureTime, StringFormat='{}{0:HH:mm}'}" Margin="5,2"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Arrivée à:" FontWeight="SemiBold" Margin="0,2"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PredefinedRoute.ArrivalTime, StringFormat='{}{0:HH:mm}'}" Margin="5,2"/>
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Tarif:" FontWeight="SemiBold" Margin="0,2"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding PredefinedRoute.Price, StringFormat='{}{0:C}'}" Margin="5,2"/>
+
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Places:" FontWeight="SemiBold" Margin="0,2"/>
+                                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="5,2">
+                                    <TextBlock Text="{Binding AvailableSeats}"/>
+                                    <TextBlock Text=" disponibles" Margin="3,0,0,0"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="{Binding PredefinedRoute.IntermediateStations, StringFormat='Stations intermédiaires: {0}'}"
+                                       Margin="0,5,0,0" FontStyle="Italic" Foreground="#666"
+                                       TextWrapping="Wrap"/>
+
+                            <TextBlock Text="⚠ Dernières places disponibles"
+                                       Foreground="Orange" FontWeight="SemiBold"
+                                       Margin="0,5,0,0"
+                                       Visibility="{Binding IsAlmostFull, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                            <TextBlock Text="✗ COMPLET"
+                                       Foreground="Red" FontWeight="Bold"
+                                       Margin="0,5,0,0"
+                                       Visibility="{Binding IsFull, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Border Grid.Row="2"
-            BorderBrush="#CCC"
-            BorderThickness="1"
-            Padding="10"
-            Margin="0,10,0,0"
-            Visibility="{Binding HasSelectedTrain,
-                         Converter={StaticResource BoolToVisibilityConverter}}">
+        <StackPanel Grid.Row="3" Visibility="{Binding HasSelectedTrain, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Margin="0,10,0,0">
+            <Button Content="Réserver ce billet"
+                    Command="{Binding ReserveTicketCommand}"
+                    Padding="15,8"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    Background="#4CAF50"
+                    Foreground="White"
+                    BorderThickness="0"
+                    HorizontalAlignment="Center"/>
+        </StackPanel>
 
-            <StackPanel>
-
-                <TextBlock Text="Détails de l’itinéraire"
-               FontSize="16"
-               FontWeight="Bold"
-               Margin="0,0,0,10"/>
-
-                <TextBlock Text="{Binding SelectedTrain.Id,
-               StringFormat='Train #{0}'}"
-               FontWeight="SemiBold"/>
-
-                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.Name}" />
-
-                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.StartStation.Name,
-               StringFormat='Départ : {0}'}"/>
-
-                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.EndStation.Name,
-               StringFormat='Arrivée : {0}'}"/>
-
-                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.DepartureTime,
-               StringFormat='Heure de départ : {0:HH:mm}'}"/>
-
-                <TextBlock Text="{Binding SelectedTrain.PredefinedRoute.ArrivalTime,
-               StringFormat='Heure d’arrivée : {0:HH:mm}'}"/>
-
-                <TextBlock Text="{Binding SelectedTrain.AvailableSeats,
-               StringFormat='Places disponibles : {0}'}"/>
-
-                <TextBlock Text="Dernières places disponibles"
-               Foreground="Orange"
-               Visibility="{Binding SelectedTrain.IsAlmostFull,
-                            Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-            </StackPanel>
-        </Border>
+        <TextBlock Grid.Row="4"
+                   Text="{Binding ConfirmationMessage}"
+                   Foreground="Green"
+                   FontWeight="SemiBold"
+                   FontSize="14"
+                   TextAlignment="Center"
+                   Margin="0,10,0,0"
+                   TextWrapping="Wrap"/>
     </Grid>
 </UserControl>

@@ -41,7 +41,7 @@
                     Margin="10"
                     Height="25"
                     Command="{Binding NavigateToReserveTicketViewCommand}"
-                    Visibility="{Binding UserSessionService.IsUserAdmin, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    Visibility="{Binding UserSessionService.IsUserConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
         </StackPanel>
         <ContentControl Grid.Column="1" Content="{Binding NavigationService.CurrentView}"></ContentControl>
     </Grid>
