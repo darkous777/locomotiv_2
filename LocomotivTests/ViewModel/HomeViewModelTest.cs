@@ -14,6 +14,7 @@ namespace LocomotivTests.ViewModel
         private readonly Mock<IUserSessionService> _userSessionServiceMock;
         private readonly Mock<IPredefinedRouteDAL> _predefinedRouteDALMock;
         private readonly Mock<ITrainDAL> _trainDALMock;
+        private readonly Mock<ITicketDAL> _ticketDALMock;
         private readonly HomeViewModel _viewmodel;
 
         public HomeViewModelTest()
@@ -24,7 +25,7 @@ namespace LocomotivTests.ViewModel
             _userSessionServiceMock = new Mock<IUserSessionService>();
             _predefinedRouteDALMock = new Mock<IPredefinedRouteDAL>();
             _trainDALMock = new Mock<ITrainDAL>();
-
+            _ticketDALMock = new Mock<ITicketDAL>();
             _stationDALMock.Setup(dal => dal.GetAll())
                 .Returns(new List<Station>());
 
@@ -34,7 +35,8 @@ namespace LocomotivTests.ViewModel
                 _userSessionServiceMock.Object,
                 _stationDALMock.Object,
                 _predefinedRouteDALMock.Object,
-                _trainDALMock.Object
+                _trainDALMock.Object,
+                _ticketDALMock.Object
             );
         }
 
