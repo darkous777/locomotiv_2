@@ -11,10 +11,18 @@ namespace LocomotivTests.ViewModel
         private readonly ReserveTicketViewModel _viewmodel;
         private readonly Train _trainWithSeats;
         private readonly Train _trainWithoutSeats;
+        private readonly Mock<ITicketDAL> _ticketDAL;
+        private readonly Mock<IStationDAL> _stationDAL;
+        private readonly Mock<IUserSessionService> _userSessionService;
+        private readonly Mock<ILoggingService> _loggingService;
 
         public ReserveTicketViewModelTest()
         {
             _trainDALMock = new Mock<ITrainDAL>();
+            _ticketDAL = new Mock<ITicketDAL>();
+            _stationDAL = new Mock<IStationDAL>();
+            _userSessionService = new Mock<IUserSessionService>();
+            _loggingService = new Mock<ILoggingService>();
 
             _trainWithSeats = new Train
             {
@@ -36,7 +44,7 @@ namespace LocomotivTests.ViewModel
             _trainDALMock.Setup(d => d.GetAllAvailablePassengerTrains())
                 .Returns(new List<Train>());
 
-            _viewmodel = new ReserveTicketViewModel(_trainDALMock.Object);
+            _viewmodel = new ReserveTicketViewModel(_trainDALMock.Object, _ticketDAL.Object, _stationDAL.Object, _userSessionService.Object, _loggingService.Object);
         }
 
         [Fact]
